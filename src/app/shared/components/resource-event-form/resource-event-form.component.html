@@ -1,0 +1,100 @@
+<form
+  [formGroup]="eventForm"
+  (ngSubmit)="onSubmit()"
+  class="flex flex-col gap-6 p-6 w-full mx-auto"
+>
+  <!-- Title Field -->
+  <div class="flex flex-col">
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Title</mat-label>
+      <input matInput placeholder="Event Title" formControlName="title" />
+      <mat-error *ngIf="eventForm.get('title')?.hasError('required')"
+        >Title is required</mat-error
+      >
+    </mat-form-field>
+  </div>
+
+  <!-- Start Date Field with Time -->
+  <div class="flex flex-col">
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Start Date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="startPicker"
+        formControlName="startDate"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="startPicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+      <mat-error *ngIf="eventForm.get('startDate')?.hasError('required')"
+        >Start Date is required</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Start Time</mat-label>
+      <input matInput type="time" formControlName="startTime" />
+    </mat-form-field>
+  </div>
+
+  <!-- End Date Field with Time -->
+  <div class="flex flex-col">
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>End Date</mat-label>
+      <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="endPicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>End Time</mat-label>
+      <input matInput type="time" formControlName="endTime" />
+    </mat-form-field>
+  </div>
+
+  <!-- Resource Selection -->
+  <div class="flex flex-col">
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Resource</mat-label>
+      <mat-select formControlName="resourceId">
+        <mat-option *ngFor="let resource of resources" [value]="resource.id">{{
+          resource.name
+        }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="eventForm.get('resourceId')?.hasError('required')"
+        >Resource is required</mat-error
+      >
+    </mat-form-field>
+  </div>
+
+  <!-- Draggable Checkbox -->
+  <div class="flex items-center">
+    <mat-checkbox formControlName="draggable">Draggable</mat-checkbox>
+  </div>
+
+  <!-- Resizable Section -->
+  <div class="flex flex-col" formGroupName="resizable">
+    <mat-label>Resizable</mat-label>
+    <div class="flex flex-row gap-4">
+      <mat-checkbox formControlName="beforeStart">Before Start</mat-checkbox>
+      <mat-checkbox formControlName="afterEnd">After End</mat-checkbox>
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="flex justify-center">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="eventForm.invalid"
+    >
+      Submit
+    </button>
+  </div>
+</form>
