@@ -6,12 +6,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { Subject } from 'rxjs';
 import {
   CalendarEvent,
   CalendarEventTimesChangedEvent,
   CalendarView,
 } from 'angular-calendar';
-import { Subject } from 'rxjs';
+
 import { Resource } from '../../models/resource.model';
 import { ResurceCalendarEvent } from '../../models/resurce-calendar-event.model';
 

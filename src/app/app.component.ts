@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { ResurceCalendarEvent } from './shared/models/resurce-calendar-event.model';
-import { Resource } from './shared/models/resource.model';
 
 import { MatDrawer } from '@angular/material/sidenav';
+
+import { ResurceCalendarEvent } from './shared/models/resurce-calendar-event.model';
+import { Resource } from './shared/models/resource.model';
 
 @Component({
   selector: 'app-root',
