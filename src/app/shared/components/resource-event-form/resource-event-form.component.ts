@@ -24,13 +24,7 @@ export class ResourceEventFormComponent implements OnInit, OnChanges {
 
   constructor(private fb: FormBuilder) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['event'].currentValue) {
-      this.populateForm(this.event!);
-    }
-  }
-
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.eventForm = this.fb.group({
       id: null,
       title: ['', Validators.required],
@@ -46,13 +40,25 @@ export class ResourceEventFormComponent implements OnInit, OnChanges {
       }),
     });
 
-    // Se l'evento è fornito, popola la form
     if (this.event) {
       this.populateForm(this.event);
     }
   }
 
-  populateForm(event: ResurceCalendarEvent): void {
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes['event'].currentValue) {
+      this.populateForm(this.event!);
+    }
+  }
+
+  public onSubmit(): void {
+    if (this.eventForm.valid) {
+      const formValue = this.getFormValue();
+      this.eventSubmitted.emit(formValue);
+    }
+  }
+
+  private populateForm(event: ResurceCalendarEvent): void {
     this.eventForm.patchValue({
       id: event.id,
       title: event.title,
@@ -66,23 +72,15 @@ export class ResourceEventFormComponent implements OnInit, OnChanges {
     });
   }
 
-  formatDate(date: Date): string {
+  private formatDate(date: Date): string {
     return date ? date.toISOString().split('T')[0] : '';
   }
 
-  formatTime(date: Date): string {
+  private formatTime(date: Date): string {
     return date ? date.toTimeString().split(' ')[0].slice(0, 5) : ''; // Format HH:mm
   }
 
-  onSubmit(): void {
-    debugger;
-    if (this.eventForm.valid) {
-      const formValue = this.getFormValue();
-      this.eventSubmitted.emit(formValue); // Emetti l'output con i dati del form
-    }
-  }
-
-  getFormValue(): ResurceCalendarEvent {
+  private getFormValue(): ResurceCalendarEvent {
     const { startDate, startTime, endDate, endTime, ...rest } =
       this.eventForm.value;
 

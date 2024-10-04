@@ -63,11 +63,30 @@ export class AppComponent {
     this.drawer.open();
   }
 
+  public newEvent() {
+    this.eventSelected = {
+      title: 'New Event',
+      start: new Date(),
+      end: new Date(),
+      resourceId: 1,
+      draggable: true,
+      resizable: {
+        afterEnd: true,
+        beforeStart: true,
+      },
+    };
+    this.drawer.open();
+  }
+
   public saveEvent(event: ResurceCalendarEvent) {
-    debugger;
-    const i = this.events.findIndex((e) => (e.id = event.id));
-    this.events[i] = event;
-    this.events = [...this.events];
+    if (event.id) {
+      const i = this.events.findIndex((e) => e.id == event.id);
+      this.events[i] = event;
+    } else {
+      event.id = this.events.length + 1;
+      this.events.push(event);
+    }
+    this.events = [...this.events]; // For trigher ngChange
     this.drawer.close();
   }
 }

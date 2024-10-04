@@ -73,14 +73,15 @@
             : locale
       }}
     </div>
-
     <div
-      class="w-full flex text-center h-full border-l-2 border-lightgray"
+      class="flex text-center h-full border-l-2 border-lightgray"
       *ngIf="!isTimeLabel"
     >
-      <ng-container *ngFor="let r of resources; let last = last">
+      <ng-container
+        *ngFor="let r of resources; let last = last; let first = first"
+      >
         <div
-          *ngIf="!last"
+          *ngIf="!(last && first)"
           class="border-r border-lightgray h-full"
           [style.width.%]="100 / resources.length"
         ></div>
@@ -89,16 +90,98 @@
   </div>
 </ng-template>
 
-<div class="w-full h-full">
-  <mwl-calendar-week-view
-    [viewDate]="viewDate"
-    [events]="eventsInternal"
-    [headerTemplate]="customHeaderTemplate"
-    [hourSegmentTemplate]="customHourSegmentTemplate"
-    [refresh]="refresh"
-    [weekStartsOn]="1"
-    (eventTimesChanged)="eventTimesChanged($event)"
-    (eventClicked)="eventClick($event)"
-  >
-  </mwl-calendar-week-view>
+<div class="w-full">
+  <div class="m-4 flex gap-6 justify-between items-center">
+    <section>
+      <mat-button-toggle-group [(ngModel)]="view" aria-label="Calendar view">
+        <mat-button-toggle [value]="CalendarView.Week">Week</mat-button-toggle>
+        <mat-button-toggle [value]="CalendarView.Day">Day</mat-button-toggle>
+      </mat-button-toggle-group>
+    </section>
+
+    <section>
+      <div class="flex gap-2">
+        <button
+          class="w-24"
+          mat-stroked-button
+          color="base"
+          mwlCalendarPreviousView
+          [view]="view"
+          [(viewDate)]="viewDate"
+        >
+          Previus
+        </button>
+        <button
+          class="w-24"
+          mat-stroked-button
+          color="base"
+          mwlCalendarToday
+          [(viewDate)]="viewDate"
+        >
+          Today
+        </button>
+        <button
+          class="w-24"
+          mat-stroked-button
+          color="base"
+          mwlCalendarNextView
+          [view]="view"
+          [(viewDate)]="viewDate"
+        >
+          Next
+        </button>
+      </div>
+    </section>
+
+    <section>
+      <span class="text-xl">{{
+        viewDate | calendarDate : view + "ViewTitle" : "en"
+      }}</span>
+    </section>
+  </div>
+
+  <div [ngSwitch]="view">
+    <div *ngSwitchCase="CalendarView.Week" class="pb-8">
+      <mwl-calendar-week-view
+        [viewDate]="viewDate"
+        [events]="eventsInternal"
+        [headerTemplate]="customHeaderTemplate"
+        [hourSegmentTemplate]="customHourSegmentTemplate"
+        [refresh]="refresh"
+        [weekStartsOn]="1"
+        (eventTimesChanged)="eventTimesChanged($event)"
+        (eventClicked)="eventClick($event)"
+      >
+      </mwl-calendar-week-view>
+    </div>
+
+    <div class="relative" *ngSwitchCase="CalendarView.Day">
+      <div class="relative flex text-center ms-[70px]">
+        <span
+          [style.width.%]="100 / resources.length"
+          *ngFor="let r of resources"
+          >{{ r.name }}</span
+        >
+      </div>
+      <div
+        class="flex absolute h-full w-[calc(100%-70px)] ms-[70px] z-10 pointer-events-none"
+      >
+        <ng-container *ngFor="let r of resources; let last = last">
+          <div
+            class="border-l border-lightgray h-full"
+            [style.width.%]="100 / resources.length"
+          ></div>
+        </ng-container>
+      </div>
+      <mwl-calendar-day-view
+        [viewDate]="viewDate"
+        [events]="eventsInternal"
+        [refresh]="refresh"
+        [hourSegmentTemplate]="customHourSegmentTemplate"
+        (eventTimesChanged)="eventTimesChanged($event)"
+        (eventClicked)="eventClick($event)"
+      >
+      </mwl-calendar-day-view>
+    </div>
+  </div>
 </div>

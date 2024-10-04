@@ -9,6 +9,7 @@ import {
 import {
   CalendarEvent,
   CalendarEventTimesChangedEvent,
+  CalendarView,
 } from 'angular-calendar';
 import { Subject } from 'rxjs';
 import { Resource } from '../../models/resource.model';
@@ -22,8 +23,7 @@ import { ResurceCalendarEvent } from '../../models/resurce-calendar-event.model'
 export class ResourcesCalendarComponent implements OnChanges {
   @Input() public resources!: Resource[];
   @Input() public events!: ResurceCalendarEvent[];
-  @Output() public eventChanged =
-    new EventEmitter<CalendarEventTimesChangedEvent>();
+  @Output() public eventChanged = new EventEmitter<ResurceCalendarEvent>();
 
   @Output() eventSelected = new EventEmitter<ResurceCalendarEvent>();
 
@@ -31,10 +31,11 @@ export class ResourcesCalendarComponent implements OnChanges {
 
   public viewDate: Date = new Date();
   public refresh = new Subject<void>();
+  public view: CalendarView = CalendarView.Week;
+  public CalendarView = CalendarView;
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes['events'].currentValue) {
-      debugger;
       this.eventsInternal = this.events.map((e) => ({
         ...e,
         cssClass: `col-cal-${
@@ -47,11 +48,15 @@ export class ResourcesCalendarComponent implements OnChanges {
   public eventTimesChanged(changeEvent: CalendarEventTimesChangedEvent): void {
     changeEvent.event.start = changeEvent.newStart;
     changeEvent.event.end = changeEvent.newEnd;
-    this.eventChanged.emit(changeEvent);
+    this.eventChanged.emit(changeEvent.event as ResurceCalendarEvent);
     this.refresh.next();
   }
 
-  public eventClick(e: any) {
-    this.eventSelected.emit(e.event);
+  public eventClick(e: {
+    event: CalendarEvent;
+    sourceEvent: MouseEvent | KeyboardEvent;
+  }) {
+    debugger;
+    this.eventSelected.emit(e.event as ResurceCalendarEvent);
   }
 }

@@ -1,4 +1,4 @@
-<mat-drawer-container autosize [hasBackdrop]="true">
+<mat-drawer-container autosize [hasBackdrop]="true" class="h-full">
   <mat-drawer #drawer mode="over" position="end">
     <div class="w-96">
       <app-resource-event-form
@@ -13,5 +13,12 @@
     [resources]="resources"
     [events]="events"
     (eventSelected)="selectEvent($event)"
+    (eventChanged)="saveEvent($event)"
   ></app-resources-calendar>
 </mat-drawer-container>
+
+<div class="fixed bottom-4 right-8 z-50">
+  <button mat-fab (click)="newEvent()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
